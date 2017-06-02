@@ -7,6 +7,8 @@ package rmbank.gui;
 
 import java.util.List;
 import java.util.Random;
+import javax.swing.JComboBox;
+import rmbank.Account;
 import rmbank.Card;
 import rmbank.database.BankDB;
 
@@ -41,6 +43,7 @@ public class CardInfo extends javax.swing.JPanel {
         pinField = new javax.swing.JPasswordField();
         changePINButton = new javax.swing.JButton();
         showPINButton = new javax.swing.JButton();
+        accountBox = new javax.swing.JComboBox();
 
         cardBox.setFont(new java.awt.Font("Arial", 0, 11)); // NOI18N
         cardBox.addActionListener(new java.awt.event.ActionListener() {
@@ -125,6 +128,8 @@ public class CardInfo extends javax.swing.JPanel {
                                 .addComponent(showPINButton))
                             .addComponent(newCardButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                             .addComponent(toggleBlockedButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(accountBox, javax.swing.GroupLayout.PREFERRED_SIZE, 190, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(0, 0, Short.MAX_VALUE)))
                 .addContainerGap())
         );
@@ -137,14 +142,16 @@ public class CardInfo extends javax.swing.JPanel {
                 .addComponent(account, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(blocked, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 34, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 40, Short.MAX_VALUE)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                         .addComponent(changePINButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addComponent(showPINButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                     .addComponent(pinField, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 36, Short.MAX_VALUE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(newCardButton)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(newCardButton)
+                    .addComponent(accountBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(toggleBlockedButton)
                 .addGap(185, 185, 185))
@@ -169,7 +176,7 @@ public class CardInfo extends javax.swing.JPanel {
                 System.out.println(number);
             }while (new BankDB().doesCardExist(number));
 
-            int accnum = 1;
+            int accnum = (int)this.accountBox.getSelectedItem();
             new BankDB().createCard(number, accnum, 1+new Random().nextInt(9999));
         } catch (Exception ex) {ex.printStackTrace();}
     }//GEN-LAST:event_newCardButtonActionPerformed
@@ -200,10 +207,16 @@ public class CardInfo extends javax.swing.JPanel {
         for (Card c : cards) {
             this.cardBox.addItem(c.getNumber());
         }
+        this.accountBox.removeAllItems();
+        JComboBox accounts = Manage.getInstance().getAccounts().getAccountBox();
+        for (int i = 0; i < accounts.getItemCount(); i++) {
+            this.accountBox.addItem(accounts.getItemAt(i));
+        }
     }
     
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JLabel account;
+    private javax.swing.JComboBox accountBox;
     private javax.swing.JLabel blocked;
     private javax.swing.JComboBox cardBox;
     private javax.swing.JButton changePINButton;

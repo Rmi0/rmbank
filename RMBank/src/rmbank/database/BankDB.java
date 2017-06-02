@@ -248,10 +248,22 @@ public class BankDB {
     
     public List<Card> getCards(int customerid) throws SQLException, ClassNotFoundException, InstantiationException, IllegalAccessException {
         List<Card> cards = new ArrayList<>();
-        String query = "select * from card inner join account ON card.accnum = account.number;";
-        ResultSet rs = this.executeQuery(query);
+        String query = "select card.id as id, card.number as number,"
+                + " card.accnum as accnum, card.blocked as blocked, card.pin"
+                + " as pin from card inner join account ON"
+                + " card.accnum = account.number inner join customer on"
+                + " account.customerid = customer.id where customer.id = ?";
+        PreparedStatement ps = getConnection().prepareStatement(query);
+        ps.setInt(1, customerid);
+        ResultSet rs = ps.executeQuery();
+        System.out.println(ps.toString());
         while (rs.next()) {
-            
+            int id = rs.getInt("id");
+            long number = rs.getLong("number");
+            int accnum = rs.getInt("accnum");
+            boolean blocked = rs.getString("blocked").equals("N")?false:true;
+            int pin = rs.getInt("pin");
+            cards.add(new Card(id, number, accnum, blocked, pin));
         }
         return cards;
     }

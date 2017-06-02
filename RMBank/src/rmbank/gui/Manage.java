@@ -225,6 +225,7 @@ public class Manage extends JFrame {
             public void actionPerformed(ActionEvent e) {
                 loadGeneralDetails();
                 loadAccounts();
+                loadCards();
                 infoholder.setSelectedIndex(0);
             }
         });
@@ -294,6 +295,7 @@ public class Manage extends JFrame {
     public void loadCards() {
         try {
             int id = Integer.parseInt(String.valueOf(customerBox.getSelectedItem()).split(" ")[0]);
+            System.out.println("id");
             List<Card> cards = new BankDB().getCards(id);
             this.cards.load(cards);
         } catch(Exception ex) {ex.printStackTrace();}
@@ -302,4 +304,10 @@ public class Manage extends JFrame {
     public static Manage getInstance() {
         return instance;
     }
+
+    public AccountInfo getAccounts() {
+        return accounts;
+    }
+    
+    
 }
