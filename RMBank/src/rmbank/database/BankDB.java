@@ -261,16 +261,45 @@ public class BankDB {
             int id = rs.getInt("id");
             long number = rs.getLong("number");
             int accnum = rs.getInt("accnum");
-            boolean blocked = rs.getString("blocked").equals("N")?false:true;
+            boolean blocked = rs.getString("blocked").equals("N");
             int pin = rs.getInt("pin");
             cards.add(new Card(id, number, accnum, blocked, pin));
         }
         return cards;
     }
     
+    public Card getCardByNumber(long n) throws SQLException, ClassNotFoundException, InstantiationException, IllegalAccessException {
+        String query = "select * from card where number=?";
+        
+        PreparedStatement ps = getConnection().prepareStatement(query);
+        ps.setLong(1, n);
+        
+        ResultSet rs = ps.executeQuery();
+        
+        if (rs.next()) {
+            int id = rs.getInt("id");
+            int accnum = rs.getInt("accnum");
+            boolean blocked = rs.getString("blocked").equals("Y");
+            int pin = rs.getInt("pin");
+            
+            return new Card(id,n,accnum,blocked,pin);
+        }
+        return null;
+    }
+    
     public boolean doesCardExist(long number)  throws SQLException, ClassNotFoundException, InstantiationException, IllegalAccessException {
         String query = "select number from card where number="+number;
         ResultSet rs = this.executeQuery(query);
         return rs.next();
+    }
+    
+    public void setBlocked(long cardNumber, boolean blocked) throws SQLException, ClassNotFoundException, InstantiationException, IllegalAccessException {
+        String query = "update card SET blocked=? WHERE number=?";
+        PreparedStatement ps = getConnection().prepareStatement(query);
+        
+        ps.setString(1, blocked==true?"Y":"N");
+        ps.setLong(2, cardNumber);
+        
+        ps.execute();
     }
 }

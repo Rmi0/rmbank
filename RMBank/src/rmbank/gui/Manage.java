@@ -297,6 +297,7 @@ public class Manage extends JFrame {
             int id = Integer.parseInt(String.valueOf(customerBox.getSelectedItem()).split(" ")[0]);
             System.out.println("id");
             List<Card> cards = new BankDB().getCards(id);
+            //this.cards = new CardInfo();
             this.cards.load(cards);
         } catch(Exception ex) {ex.printStackTrace();}
     }

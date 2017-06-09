@@ -159,7 +159,25 @@ public class CardInfo extends javax.swing.JPanel {
     }// </editor-fold>//GEN-END:initComponents
 
     private void cardBoxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cardBoxActionPerformed
-        // TODO add your handling code here:
+        try {
+            Object o = this.cardBox.getSelectedItem();
+            System.out.println("object:"+o.toString());
+            if(o==null)System.out.println("preco???????");
+            long cc=Long.parseLong(o.toString());
+            System.out.println("cc="+cc);
+            Card c = new BankDB().getCardByNumber(35435);
+            if (c == null) return;
+            
+            this.account.setText("Account: "+c.getAccnum());
+            this.blocked.setText("Blocked: "+(c.isBlocked()?"Yes":"No"));
+            
+            StringBuffer sb = new StringBuffer(String.valueOf(c.getPin()));
+            for (int i = 0; i < 4-sb.capacity(); i++) {
+                sb.insert(0, "0");
+            }
+            this.pinField.setText(sb.toString());
+            
+        } catch (Exception ex) {ex.printStackTrace();}
     }//GEN-LAST:event_cardBoxActionPerformed
 
     private void toggleBlockedButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_toggleBlockedButtonActionPerformed
